@@ -14,5 +14,7 @@ libraryDependencies ++= Seq(
 
 // Dependencies
 libraryDependencies ++= Seq(
-    "org.eclipse.jetty" % "jetty-server" % "latest.integration"
+    "org.eclipse.jetty" % "jetty-server" % "latest.integration",
+    "org.eclipse.jetty" % "jetty-servlet" % "latest.integration",
+    "javax.servlet" % "servlet-api" % "latest.integration"
 )
