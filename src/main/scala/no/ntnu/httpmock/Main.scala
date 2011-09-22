@@ -8,9 +8,12 @@ object Main extends App {
   def startServer(port: Int): Server = {
     val server = new Server(port)
     val context = new ServletContextHandler(server, "/")
-    context.addServlet(new ServletHolder(new ControllerServlet(new SimpleMockHandler)),
-        "/_httpmock/*")
-    context.addServlet(new ServletHolder(new HelloServlet), "/*")
+
+    val controller = new ControllerServlet(new SimpleMockHandler)
+    val mockServlet = new MockServlet(controller)
+    
+    context.addServlet(new ServletHolder(controller), "/_httpmock/*")
+    context.addServlet(new ServletHolder(mockServlet), "/*")
     server.start
     server
   }

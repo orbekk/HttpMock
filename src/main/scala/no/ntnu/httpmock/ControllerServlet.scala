@@ -41,7 +41,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
           Types.MockResponse(responseString))
     } catch {
       case e:ServletHelper.ParameterNotFoundException =>
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
             "missing parameter: " + e.getMessage)
     }
   }
