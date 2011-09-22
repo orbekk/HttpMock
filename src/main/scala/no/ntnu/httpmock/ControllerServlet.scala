@@ -28,7 +28,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
   
   def defaultPage(request: HttpServletRequest, response: HttpServletResponse) {
     response.getWriter().println("Current mock calls registered:")
-    for (val (mockRequest, mockResponse) <- mockHandler.getMockMap()) {
+    for ((mockRequest, mockResponse) <- mockHandler.getMockMap()) {
        response.getWriter().println(mockRequest + " => " + mockResponse)
     }
   }

@@ -6,6 +6,8 @@ organization := "no.ntnu"
 
 scalaVersion := "2.9.1"
 
+scalacOptions += "-deprecation"
+
 // Test dependencies
 libraryDependencies ++= Seq(
     "org.scalatest" % "scalatest_2.9.1" % "latest.integration" % "test",
