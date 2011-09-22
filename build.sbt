@@ -8,7 +8,7 @@ scalaVersion := "2.9.1"
 
 // Test dependencies
 libraryDependencies ++= Seq(
-    "org.scalatest" % "scalatest_2.9.0" % "latest.integration" % "test",
+    "org.scalatest" % "scalatest_2.9.1" % "latest.integration" % "test",
     "junit" % "junit" % "latest.integration" % "test"
 )
 
