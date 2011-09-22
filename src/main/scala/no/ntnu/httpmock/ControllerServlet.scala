@@ -4,9 +4,10 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class ControllerServlet(mockHandler: MockHandler) extends HttpServlet {
+class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
+  with MockProvider {
   override protected def doGet(request: HttpServletRequest,
-      response: HttpServletResponse) = {
+      response: HttpServletResponse) {
     val path = ServletHelper.getServletRelativePath(request)
     
     path match {
@@ -16,7 +17,23 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet {
   }
   
   override protected def doPost(request: HttpServletRequest,
-      response: HttpServletResponse) = {
+      response: HttpServletResponse) {
+    val path = ServletHelper.getServletRelativePath(request)
+    
+    path match {
+      case "/set" => setMock(request, response)
+      case _ => response.sendError(HttpServletResponse.SC_NOT_FOUND)
+    }
+  }
+  
+  def defaultPage(request: HttpServletRequest, response: HttpServletResponse) {
+    response.getWriter().println("Current mock calls registered:")
+    for (val (mockRequest, mockResponse) <- mockHandler.getMockMap()) {
+       response.getWriter().println(mockRequest + " => " + mockResponse)
+    }
+  }
+  
+  def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
       val requestString = ServletHelper.getParameter("request", request)
       val responseString = ServletHelper.getParameter("response", request)
@@ -29,10 +46,6 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet {
     }
   }
   
-  def defaultPage(request: HttpServletRequest, response: HttpServletResponse) {
-    response.getWriter().println("Current mock calls registered:")
-    for (val (mockRequest, mockResponse) <- mockHandler.getMockMap()) {
-       response.getWriter().println(mockRequest + " => " + mockResponse)
-    }
-  }
+  def getResponseFor(request: Types.MockRequest): Option[Types.MockResponse] =
+    mockHandler.getResponseFor(request)
 }

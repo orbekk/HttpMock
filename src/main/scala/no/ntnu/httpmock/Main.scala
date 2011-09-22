@@ -9,7 +9,7 @@ object Main extends App {
     val server = new Server(port)
     val context = new ServletContextHandler(server, "/")
     context.addServlet(new ServletHolder(new ControllerServlet(new SimpleMockHandler)),
-        "/control/*")
+        "/_httpmock/*")
     context.addServlet(new ServletHolder(new HelloServlet), "/*")
     server.start
     server
