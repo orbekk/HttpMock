@@ -14,4 +14,8 @@ class SimpleMockHandler extends MockHandler {
   def registerMock(request: MockRequest, response: MockResponse): Unit = { 
     map.update(request, response)    
   }
+  
+  def getMockMap(): Map[MockRequest, MockResponse] = {
+    map.toMap
+  }
 }
