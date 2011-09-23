@@ -14,12 +14,11 @@ object ParameterMatcher {
  */
 class ParameterMatcher(parameters: Map[String, Array[String]],
     options: ParameterMatcher.Options = ParameterMatcher.defaultOptions)
-    extends Matcher {
-
-  protected[httpmock] def internalMatches(
+    extends RequestMatcher {
+  private[matcher] def internalMatches(
       mockParameters: Map[String, Array[String]],
       requestParameters: Map[String, Array[String]]): Boolean = {
-    val parameters0 = mockParameters-- options.ignoredFields
+    val parameters0 = mockParameters -- options.ignoredFields
     val requestParameters0 = requestParameters -- options.ignoredFields
     parameters0 == requestParameters0
   }

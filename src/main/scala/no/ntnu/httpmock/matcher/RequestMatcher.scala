@@ -2,6 +2,6 @@ package no.ntnu.httpmock.matcher
 
 import javax.servlet.http.HttpServletRequest
 
-trait Matcher {
+trait RequestMatcher {
   def matches(request: HttpServletRequest): Boolean
 }

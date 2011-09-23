@@ -9,22 +9,22 @@ class MockServlet(mockProvider: MockProvider)
     extends HttpServlet with Logger {
   override protected def doGet(request: HttpServletRequest,
       response: HttpServletResponse) {
-    val mockRequest = Types.MockRequest(request.getRequestURI())
-    val maybeMockResponse = mockProvider.getResponseFor(mockRequest)
+    val requestString = request.getRequestURI()
+    val maybeMockResponse = mockProvider.getResponseFor(request)
     maybeMockResponse match {
       case Some(mockResponse) => serve(request, response, mockResponse)
-      case None => unexpectedCall(request, response, mockRequest)
+      case None => unexpectedCall(request, response, requestString)
     }
   }
-  
+
   private def serve(request: HttpServletRequest,
       response: HttpServletResponse, mockResponse: Types.MockResponse) {
     response.getWriter().println(mockResponse.data)
   }
-  
+
   private def unexpectedCall(request: HttpServletRequest,
-      response: HttpServletResponse, mockRequest: Types.MockRequest) {
-    logger.warning("Unexpected call: " + mockRequest + ". " +
+      response: HttpServletResponse, requestString: String) {
+    logger.warning("Unexpected call: " + requestString + ". " +
         "Note: In future versions this will give a verification error, but " +
         "verification is not yet supported")
     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unexpected call")

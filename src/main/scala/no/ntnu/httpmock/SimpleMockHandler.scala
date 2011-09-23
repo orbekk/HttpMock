@@ -1,19 +1,19 @@
 package no.ntnu.httpmock
 
-import scala.collection.mutable.HashMap
+import java.util.ArrayList
+import javax.servlet.http.HttpServletRequest
+import scala.collection.JavaConversions.collectionAsScalaIterable
 
 class SimpleMockHandler extends MockHandler {
-  val map = new HashMap[Types.MockRequest, Types.MockResponse]
-  
-  def getResponseFor(request: Types.MockRequest): Option[Types.MockResponse] = {
-    map.get(request)
+  private val mocks = new ArrayList[(Types.MockRequest, Types.MockResponse)]
+
+  override def getResponseFor(request: HttpServletRequest):
+      Option[Types.MockResponse] = {
+    mocks find {mock => mock._1.matcher.matches(request)}
+    None
   }
 
   def registerMock(request: Types.MockRequest, response: Types.MockResponse) = {
-    map.update(request, response)    
-  }
-  
-  def getMockMap(): Map[Types.MockRequest, Types.MockResponse] = {
-    map.toMap
+    mocks add ((request, response))
   }
 }
