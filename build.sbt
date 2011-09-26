@@ -10,8 +10,9 @@ scalacOptions += "-deprecation"
 
 // Test dependencies
 libraryDependencies ++= Seq(
-    "org.scalatest" % "scalatest_2.9.1" % "latest.integration" % "test",
-    "junit" % "junit" % "latest.integration" % "test"
+    "junit" % "junit" % "latest.integration" % "test",
+    "org.mockito" % "mockito-all" % "latest.integration" % "test",
+    "org.scalatest" % "scalatest_2.9.1" % "latest.integration" % "test"
 )
 
 // Dependencies
