@@ -9,8 +9,11 @@ class SimpleMockHandler extends MockHandler {
 
   override def getResponseFor(request: HttpServletRequest):
       Option[Types.MockResponse] = {
-    mocks find {mock => mock._1.matcher.matches(request)}
-    None
+    val maybeMock = mocks find {mock => mock._1.matcher.matches(request)}
+    maybeMock match {
+      case Some((request, response)) => Some(response)
+      case None => None
+    }
   }
 
   def registerMock(request: Types.MockRequest, response: Types.MockResponse) = {
