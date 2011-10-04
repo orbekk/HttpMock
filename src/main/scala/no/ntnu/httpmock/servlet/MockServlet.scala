@@ -19,7 +19,8 @@ class MockServlet(mockProvider: MockProvider)
 
   private def serve(request: HttpServletRequest,
       response: HttpServletResponse, mockResponse: Types.MockResponse) {
-    response.getWriter().println(mockResponse.data)
+    logger.info("Serving mock response: " + mockResponse)
+    response.getWriter().println(mockResponse.data + "lolbiff")
   }
 
   private def unexpectedCall(request: HttpServletRequest,

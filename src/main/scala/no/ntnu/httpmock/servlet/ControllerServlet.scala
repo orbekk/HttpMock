@@ -5,9 +5,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import no.ntnu.httpmock.matcher.ParameterMatcher
 import scala.collection.JavaConversions.mapAsScalaMap
+import com.orbekk.logging.Logger
 
 class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
-  with MockProvider {
+  with MockProvider with Logger {
   override protected def doGet(request: HttpServletRequest,
       response: HttpServletResponse) {
     val path = ServletHelper.getServletRelativePath(request)
@@ -41,6 +42,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
       val mockRequest = Types.MockRequest(
           new ParameterMatcher(request.getParameterMap().toMap))
       val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
+      logger.info("Setting up mock: " + mockResponse)
 
       mockHandler.registerMock(mockRequest, mockResponse)
     } catch {
