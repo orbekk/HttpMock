@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest
 @RunWith(classOf[JUnitRunner])
 class SimpleMockHandlerTest extends FunSuite {
   val handler = new SimpleMockHandler
-  val exampleMockParameters0 = ListMap("Fruits" -> Array("Apple", "Orange"))
-  val exampleRequestParameters0 = ListMap("Animals" -> Array("Cat")) ++
+  val exampleMockParameters0 = ListMap("Fruits" -> List("Apple", "Orange"))
+  val exampleRequestParameters0 = ListMap("Animals" -> List("Cat")) ++
       exampleMockParameters0
 
   def initExampleHandler0() = {

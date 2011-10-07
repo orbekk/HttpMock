@@ -7,8 +7,8 @@ import scala.collection.immutable.ListMap
 
 @RunWith(classOf[JUnitRunner])
 class ParameterMatcherTest extends FunSuite {
-  val exampleMockParameters0 = ListMap("Fruits" -> Array("Apple", "Orange"))
-  val exampleMockParameters1 = ListMap("Animals" -> Array("Cat")) ++
+  val exampleMockParameters0 = ListMap("Fruits" -> List("Apple", "Orange"))
+  val exampleMockParameters1 = ListMap("Animals" -> List("Cat")) ++
       exampleMockParameters0
 
   test("internalMatches matches with equal properties") {

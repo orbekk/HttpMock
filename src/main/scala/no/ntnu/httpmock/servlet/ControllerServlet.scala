@@ -38,9 +38,8 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
 
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
-      // TODO: Generalize matcher configuration.
       val mockRequest = Types.MockRequest(
-          new ParameterMatcher(request.getParameterMap().toMap))
+          ParameterMatcher.fromJavaParameterMap(request.getParameterMap().toMap))
       val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
       logger.info("Setting up mock: " + mockResponse)
 

@@ -9,17 +9,26 @@ object ParameterMatcher {
   // TODO: Add partial matching.
   case class Options(ignoredFields: List[String])
   val defaultOptions = Options(Nil)
+
+  def fromJavaParameterMap(parameters: Map[String, Array[String]]) =
+    new ParameterMatcher(convertParameterMap(parameters))
+
+  def convertParameterMap(parameters: Map[String, Array[String]]):
+      Map[String, Seq[String]]  = {
+        def convert(x: Array[String]): Seq[String] = x  // Uses WrappedArray
+        parameters mapValues (x => x)
+  }
 }
 
 /**
  * A class that matches HTTP key-value parameters.
  */
-class ParameterMatcher(parameters: Map[String, Array[String]],
+class ParameterMatcher(parameters: Map[String, Seq[String]],
     options: ParameterMatcher.Options = ParameterMatcher.defaultOptions)
     extends RequestMatcher with Logger {
 
   /** Wraps a parameter map and implements equivalence checking. */
-  private case class ParameterMap(val map: Map[String, Array[String]]) {
+  private case class ParameterMap(val map: Map[String, Seq[String]]) {
     override def equals(that: Any): Boolean = {
       that match {
         case that0: ParameterMap =>
@@ -39,19 +48,20 @@ class ParameterMatcher(parameters: Map[String, Array[String]],
   }
 
   private[matcher] def internalMatches(
-      mockParameters: Map[String, Array[String]],
-      requestParameters: Map[String, Array[String]]): Boolean = {
+      mockParameters: Map[String, Seq[String]],
+      requestParameters: Map[String, Seq[String]]): Boolean = {
     val parameters0 = ParameterMap(mockParameters -- options.ignoredFields)
     val requestParameters0 = ParameterMap(requestParameters -- options.ignoredFields)
     parameters0 == requestParameters0
   }
 
   def matches(request: HttpServletRequest): Boolean = {
-    val requestParameters = request.getParameterMap().toMap
+    val requestParameters =
+      ParameterMatcher.convertParameterMap(request.getParameterMap().toMap)
     internalMatches(parameters, requestParameters)
   }
 
-  def parameterMapToString(map: Map[String, Array[String]]): String = {
+  def parameterMapToString(map: Map[String, Seq[String]]): String = {
     var result = new StringBuilder
     for ((param, values) <- map) {
       result.append(param + ": ")
