@@ -10,7 +10,7 @@ class MatcherBuilder {
     this
   }
 
-  def internalBuild(matchers: List[RequestMatcher]): RequestMatcher =
+  private def internalBuild(matchers: List[RequestMatcher]): RequestMatcher =
     new RequestMatcher {
       override def matches(request: HttpServletRequest): Boolean = {
         matchers forall (_ matches request)
