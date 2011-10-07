@@ -38,6 +38,9 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
 
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
+      val mockRequest_ = MockRequest.parseFromRequest(request.getReader())
+      logger.info(mockRequest_ toString)
+
       val mockRequest = Types.MockRequest(
           ParameterMatcher.fromJavaParameterMap(request.getParameterMap().toMap))
       val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
