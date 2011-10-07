@@ -5,7 +5,7 @@ import net.liftweb.json.JsonParser
 import net.liftweb.json.DefaultFormats
 
 object MockRequest {
-  def parseFromRequest(s: Reader) {
+  def parseFromRequest(s: Reader): MockRequest =
     try {
       val json = JsonParser.parse(s)
       implicit val formats = DefaultFormats
@@ -13,7 +13,6 @@ object MockRequest {
     } catch {
       case e:JsonParser.ParseException => return null
     }
-  }
 }
 
 /**
@@ -26,5 +25,5 @@ object MockRequest {
  */
 case class MockRequest(
     path: String,
-    parameters: Map[String, List[String]]
+    parameters: Option[Map[String, List[String]]]
 )

@@ -39,7 +39,11 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
       val mockRequest_ = MockRequest.parseFromRequest(request.getReader())
-      logger.info(mockRequest_ toString)
+      if (mockRequest_ != null) {
+        logger.info(mockRequest_ toString)
+      } else {
+        logger.warning("MockRequest did not parse")
+      }
 
       val mockRequest = Types.MockRequest(
           ParameterMatcher.fromJavaParameterMap(request.getParameterMap().toMap))
