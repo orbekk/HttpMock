@@ -4,7 +4,6 @@ import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{mock, when}
 import org.scalatest.junit.JUnitRunner
-import Types.{MockRequest, MockResponse}
 import scala.collection.immutable.ListMap
 import scala.collection.JavaConversions.mapAsJavaMap
 import no.ntnu.httpmock.matcher.ParameterMatcher
@@ -19,7 +18,7 @@ class SimpleMockHandlerTest extends FunSuite {
 
   def initExampleHandler0() = {
     val matcher = new ParameterMatcher(exampleMockParameters0)
-    handler.registerMock(MockRequest(matcher), MockResponse("example0"))
+    handler.registerMock(Types.MockRequest(matcher), Types.MockResponse("example0"))
   }
 
   test("MockHandler should return None on unknown request") {
