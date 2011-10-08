@@ -1,8 +1,9 @@
 package no.ntnu.httpmock
 
 import java.io.Reader
-import net.liftweb.json.JsonParser
 import net.liftweb.json.DefaultFormats
+import net.liftweb.json.JsonParser
+import no.ntnu.httpmock.matcher.MatcherBuilder
 
 object MockRequest {
   def parseFromRequest(s: Reader): MockRequest =
@@ -25,5 +26,11 @@ object MockRequest {
  */
 case class MockRequest(
     path: String,
-    parameters: Option[Map[String, List[String]]]
-)
+    parameters: Option[Map[String, List[String]]]) {
+  def buildMatcher() = {
+    val builder = MatcherBuilder()
+    builder.withPath(path)
+    parameters foreach (builder.withParameters _)
+    builder.build()
+  }
+}

@@ -40,19 +40,19 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
     try {
       val mockRequest_ = MockRequest.parseFromRequest(request.getReader())
       if (mockRequest_ != null) {
-        logger.info(mockRequest_ toString)
+        logger.info("Registering mock with mock request: " +
+            mockRequest_ toString)
+        val matcher = mockRequest_.buildMatcher()
+        val mockRequest = Types.MockRequest(matcher)
+        val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
+        logger.info("Setting up mock: " + mockResponse)
+        mockHandler.registerMock(mockRequest, mockResponse)
       } else {
         logger.warning("MockRequest did not parse")
       }
-
-      val mockRequest = Types.MockRequest(
-          ParameterMatcher.fromJavaParameterMap(request.getParameterMap().toMap))
-      val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
-      logger.info("Setting up mock: " + mockResponse)
-
-      mockHandler.registerMock(mockRequest, mockResponse)
     } catch {
       case e:ServletHelper.ParameterNotFoundException =>
+        logger.warning("Got error: " + e.getMessage)
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
             "missing parameter: " + e.getMessage)
     }

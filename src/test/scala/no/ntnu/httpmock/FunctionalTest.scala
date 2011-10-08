@@ -1,18 +1,20 @@
 package no.ntnu.httpmock
 
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.mockito.Mockito.{mock, when, verify, never}
-import org.mockito.Matchers
-import org.mockito.Matchers.{anyInt, anyString}
+import java.io.BufferedReader
+import java.io.PrintWriter
+import java.io.StringReader
+import java.io.StringWriter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import scala.collection.immutable.ListMap
-import scala.collection.JavaConversions.mapAsJavaMap
+import org.junit.runner.RunWith
+import org.mockito.Matchers
+import org.mockito.Matchers.{anyInt, anyString}
+import org.mockito.Mockito.{mock, when, verify, never}
 import org.scalatest.BeforeAndAfterEach
-import java.io.StringWriter
-import java.io.PrintWriter
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
+import scala.collection.JavaConversions.mapAsJavaMap
+import scala.collection.immutable.ListMap
 
 @RunWith(classOf[JUnitRunner])
 class FunctionalTest extends FunSuite with BeforeAndAfterEach {
@@ -31,6 +33,11 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
   def setRequestParameters(request: HttpServletRequest, elems: (String, Array[String])*) {
     val parameterMap = ListMap() ++ elems
     when(request.getParameterMap()) thenReturn parameterMap
+  }
+
+  def setRequestBody(request: HttpServletRequest, body: String) {
+    val reader = new BufferedReader(new StringReader(body))
+    when(request.getReader()) thenReturn reader
   }
 
   def checkSuccess(response: HttpServletResponse) {
@@ -52,16 +59,23 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
     when(controllerRequest.getRequestURI()) thenReturn "/_httpmock_control_test/set"
 
     setRequestParameters(controllerRequest, "SomeParameter" -> Array("Value"))
+    setRequestBody(controllerRequest, 
+      """{"path": "/testpath",
+          "parameters": {
+            "SomeParameter": ["Value"]}}""")
     when(controllerRequest.getMethod()) thenReturn "POST"
     controller.service(controllerRequest, controllerResponse)
     checkSuccess(controllerResponse)
 
     val request = mock(classOf[HttpServletRequest])
-    val response = mock(classOf[HttpServletResponse])
     when(request.getMethod()) thenReturn "GET"
+    when(request.getRequestURI()) thenReturn "/testpath"
+    setRequestParameters(request, "SomeParameter" -> Array("Value"))
+
+    val response = mock(classOf[HttpServletResponse])
     val writer = new StringWriter()
     when(response.getWriter()) thenReturn (new PrintWriter(writer))
-    setRequestParameters(request, "SomeParameter" -> Array("Value"))
+
     mockServlet.service(request, response)
     checkSuccess(response)
     // TODO: When mock responses has been implemented, verify the response:
