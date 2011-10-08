@@ -59,6 +59,8 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
     when(controllerRequest.getRequestURI()) thenReturn "/_httpmock_control_test/set"
 
     setRequestParameters(controllerRequest, "SomeParameter" -> Array("Value"))
+    // TODO: This can be replaced with JSON serialized from a MockRequest,
+    // which would make it easier to handle than a raw string.
     setRequestBody(controllerRequest, 
       """{"path": "/testpath",
           "parameters": {
