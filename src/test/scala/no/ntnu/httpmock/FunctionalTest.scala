@@ -6,6 +6,8 @@ import java.io.StringReader
 import java.io.StringWriter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import no.ntnu.httpmock.servlet.ControllerServlet
+import no.ntnu.httpmock.servlet.MockServlet
 import org.junit.runner.RunWith
 import org.mockito.Matchers
 import org.mockito.Matchers.{anyInt, anyString}

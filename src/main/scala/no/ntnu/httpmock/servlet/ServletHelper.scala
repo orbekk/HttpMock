@@ -1,4 +1,4 @@
-package no.ntnu.httpmock
+package no.ntnu.httpmock.servlet
 
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest

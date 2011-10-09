@@ -5,18 +5,18 @@ import javax.servlet.http.HttpServletRequest
 import scala.collection.JavaConversions.collectionAsScalaIterable
 
 class SimpleMockHandler extends MockHandler {
-  private val mocks = new ArrayList[(Types.MockRequest, Types.MockResponse)]
+  private val mocks = new ArrayList[Mock]
 
   override def getResponseFor(request: HttpServletRequest):
-      Option[Types.MockResponse] = {
-    val maybeMock = mocks find {mock => mock._1.matcher.matches(request)}
+      Option[DummyMockResponse] = {
+    val maybeMock = mocks find {_ matches request}
     maybeMock match {
-      case Some((request, response)) => Some(response)
+      case Some(mock) => Some(DummyMockResponse())
       case None => None
     }
   }
 
-  def registerMock(request: Types.MockRequest, response: Types.MockResponse) = {
-    mocks add ((request, response))
+  def registerMock(mock: Mock) = {
+    mocks add mock
   }
 }

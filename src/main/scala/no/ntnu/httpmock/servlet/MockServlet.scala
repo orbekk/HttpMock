@@ -1,9 +1,11 @@
-package no.ntnu.httpmock
+package no.ntnu.httpmock.servlet
 
+import com.orbekk.logging.Logger
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import com.orbekk.logging.Logger
+import no.ntnu.httpmock.MockProvider
+import no.ntnu.httpmock.DummyMockResponse
 
 class MockServlet(mockProvider: MockProvider)
     extends HttpServlet with Logger {
@@ -18,9 +20,9 @@ class MockServlet(mockProvider: MockProvider)
   }
 
   private def serve(request: HttpServletRequest,
-      response: HttpServletResponse, mockResponse: Types.MockResponse) {
+      response: HttpServletResponse, mockResponse: DummyMockResponse) {
     logger.info("Serving mock response: " + mockResponse)
-    response.getWriter().println(mockResponse.data + "lolbiff")
+    response.getWriter().println(mockResponse)
   }
 
   private def unexpectedCall(request: HttpServletRequest,

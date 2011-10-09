@@ -1,5 +1,7 @@
 package no.ntnu.httpmock
 
+import no.ntnu.httpmock.servlet.ControllerServlet
+import no.ntnu.httpmock.servlet.MockServlet
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder

@@ -1,11 +1,16 @@
-package no.ntnu.httpmock
+package no.ntnu.httpmock.servlet
 
+import com.orbekk.logging.Logger
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import no.ntnu.httpmock.DummyMockResponse
+import no.ntnu.httpmock.Mock
+import no.ntnu.httpmock.MockDescriptor
+import no.ntnu.httpmock.MockHandler
+import no.ntnu.httpmock.MockProvider
 import no.ntnu.httpmock.matcher.ParameterMatcher
 import scala.collection.JavaConversions.mapAsScalaMap
-import com.orbekk.logging.Logger
 
 class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
   with MockProvider with Logger {
@@ -38,15 +43,14 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
 
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
-      val mockRequest_ = MockDescriptor.parseFromRequest(request.getReader())
-      if (mockRequest_ != null) {
-        logger.info("Registering mock with mock request: " +
-            mockRequest_ toString)
-        val matcher = mockRequest_.buildMatcher()
-        val mockRequest = Types.MockRequest(matcher)
-        val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
-        logger.info("Setting up mock: " + mockResponse)
-        mockHandler.registerMock(mockRequest, mockResponse)
+      val descriptor = MockDescriptor.parseFromRequest(request.getReader())
+      if (descriptor != null) {
+        logger.info("Registering mock: " + descriptor toString)
+        val matcher = descriptor.buildMatcher()
+        val mock = new Mock(descriptor, matcher)
+        // val mockRequest = Types.MockRequest(matcher)
+        // val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
+        mockHandler.registerMock(mock)
       } else {
         logger.warning("MockDescriptor did not parse")
       }
@@ -58,6 +62,6 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
     }
   }
 
-  def getResponseFor(request: HttpServletRequest): Option[Types.MockResponse] =
+  def getResponseFor(request: HttpServletRequest): Option[DummyMockResponse] =
     mockHandler.getResponseFor(request)
 }
