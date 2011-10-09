@@ -18,7 +18,8 @@ class SimpleMockHandlerTest extends FunSuite {
 
   def initExampleHandler0() = {
     val matcher = new ParameterMatcher(exampleMockParameters0)
-    handler.registerMock(Types.MockRequest(matcher), Types.MockResponse("example0"))
+    handler.registerMock(Types.MockRequest(matcher),
+        Types.MockResponse("example0"))
   }
 
   test("MockHandler should return None on unknown request") {

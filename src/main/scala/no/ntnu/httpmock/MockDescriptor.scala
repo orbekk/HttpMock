@@ -5,26 +5,26 @@ import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonParser
 import no.ntnu.httpmock.matcher.MatcherBuilder
 
-object MockRequest {
-  def parseFromRequest(s: Reader): MockRequest =
+object MockDescriptor {
+  def parseFromRequest(s: Reader): MockDescriptor =
     try {
       val json = JsonParser.parse(s)
       implicit val formats = DefaultFormats
-      json.extract[MockRequest]
+      json.extract[MockDescriptor]
     } catch {
       case e:JsonParser.ParseException => return null
     }
 }
 
 /**
- * A MockRequest is an object that can be serialized to and from a JSON string
+ * A MockDescriptor is an object that can be serialized to and from a JSON string
  * using net.liftweb.json.
  *
  * Example of JSON string:
  *   {"path": "/some/path",
  *    "parameters": {"parameter1": ["val1", "val2"]}}
  */
-case class MockRequest(
+case class MockDescriptor(
     path: String,
     parameters: Option[Map[String, List[String]]]) {
   def buildMatcher() = {

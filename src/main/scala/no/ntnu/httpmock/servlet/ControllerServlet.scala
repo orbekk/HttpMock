@@ -38,7 +38,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
 
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
-      val mockRequest_ = MockRequest.parseFromRequest(request.getReader())
+      val mockRequest_ = MockDescriptor.parseFromRequest(request.getReader())
       if (mockRequest_ != null) {
         logger.info("Registering mock with mock request: " +
             mockRequest_ toString)
@@ -48,7 +48,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
         logger.info("Setting up mock: " + mockResponse)
         mockHandler.registerMock(mockRequest, mockResponse)
       } else {
-        logger.warning("MockRequest did not parse")
+        logger.warning("MockDescriptor did not parse")
       }
     } catch {
       case e:ServletHelper.ParameterNotFoundException =>

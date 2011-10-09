@@ -6,9 +6,9 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class MockRequestTest extends FunSuite {
-  def parse(s: String): MockRequest = {
-    MockRequest.parseFromRequest(new StringReader(s))
+class MockDescriptorTest extends FunSuite {
+  def parse(s: String): MockDescriptor = {
+    MockDescriptor.parseFromRequest(new StringReader(s))
   }
 
   test("Invalid request should fail to parse") {
