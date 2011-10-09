@@ -6,6 +6,8 @@ import java.io.StringReader
 import java.io.StringWriter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import net.liftweb.json.DefaultFormats
+import net.liftweb.json.Serialization
 import no.ntnu.httpmock.servlet.ControllerServlet
 import no.ntnu.httpmock.servlet.MockServlet
 import org.junit.runner.RunWith
@@ -60,13 +62,17 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
     when(controllerRequest.getServletPath()) thenReturn "/_httpmock_control_test"
     when(controllerRequest.getRequestURI()) thenReturn "/_httpmock_control_test/set"
 
-    setRequestParameters(controllerRequest, "SomeParameter" -> Array("Value"))
-    // TODO: This can be replaced with JSON serialized from a MockDescriptor,
-    // which would make it easier to handle than a raw string.
-    setRequestBody(controllerRequest, 
-      """{"path": "/testpath",
-          "parameters": {
-            "SomeParameter": ["Value"]}}""")
+    val descriptor = MockDescriptor(
+        path = "/testpath",
+        parameters = Some(ListMap("SomeParameter" -> List("Value"))),
+        response = ResponseDescriptor(
+          content = "Response text",
+          headers = None)
+        )
+    implicit val formats = DefaultFormats
+    val requestBody = Serialization.write(descriptor)
+    setRequestBody(controllerRequest, requestBody)
+
     when(controllerRequest.getMethod()) thenReturn "POST"
     controller.service(controllerRequest, controllerResponse)
     checkSuccess(controllerResponse)

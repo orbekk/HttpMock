@@ -1,6 +1,7 @@
 package no.ntnu.httpmock
 
 import java.io.Reader
+import javax.servlet.http.HttpServletResponse
 import net.liftweb.json.DefaultFormats
 import net.liftweb.json.JsonParser
 import no.ntnu.httpmock.matcher.MatcherBuilder
@@ -26,11 +27,19 @@ object MockDescriptor {
  */
 case class MockDescriptor(
     path: String,
-    parameters: Option[Map[String, List[String]]]) {
+    parameters: Option[Map[String, List[String]]],
+    response: ResponseDescriptor) {
   def buildMatcher() = {
     val builder = MatcherBuilder()
     builder.withPath(path)
     parameters foreach (builder.withParameters _)
     builder.build()
+  }
+}
+
+case class ResponseDescriptor(
+    content: String,
+    headers: Option[Map[String, String]]) {
+  def copyToResponse(response: HttpServletResponse) {
   }
 }
