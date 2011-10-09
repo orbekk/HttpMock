@@ -37,9 +37,20 @@ case class MockDescriptor(
   }
 }
 
+/**
+ * The response to a mock call.
+ *
+ * This class contains the content and all headers for a mock response. For a
+ * particular request, a response can be populated from this class.
+ */
 case class ResponseDescriptor(
     content: String,
     headers: Option[Map[String, String]]) {
+
+  /**
+   * Populate a HttpServletResponse with data from this ResponseDescriptor.
+   */
   def copyToResponse(response: HttpServletResponse) {
+    // TODO: Implement this method.
   }
 }
