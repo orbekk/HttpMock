@@ -51,6 +51,11 @@ case class ResponseDescriptor(
    * Populate a HttpServletResponse with data from this ResponseDescriptor.
    */
   def writeResponseTo(response: HttpServletResponse) {
-    // TODO: Implement this method.
+    headers map { headers =>
+      headers foreach { case (key, value) =>
+        response.addHeader(key, value)
+      }
+    }
+    response.getWriter().write(content)
   }
 }

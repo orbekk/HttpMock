@@ -67,8 +67,7 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
         parameters = Some(ListMap("SomeParameter" -> List("Value"))),
         response = ResponseDescriptor(
           content = "Response text",
-          headers = None)
-        )
+          headers = Some(ListMap("Content-Type" -> "text/plain"))))
     implicit val formats = DefaultFormats
     val requestBody = Serialization.write(descriptor)
     setRequestBody(controllerRequest, requestBody)
@@ -88,7 +87,7 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
 
     mockServlet.service(request, response)
     checkSuccess(response)
-    // TODO: When mock responses has been implemented, verify the response:
-    // assert(writer.toString() === "MyResponse")
+    assert(writer.toString() === "Response text")
+    verify(response).addHeader("Content-Type", "text/plain")
   }
 }
