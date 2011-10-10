@@ -50,7 +50,7 @@ case class ResponseDescriptor(
   /**
    * Populate a HttpServletResponse with data from this ResponseDescriptor.
    */
-  def copyToResponse(response: HttpServletResponse) {
+  def writeResponseTo(response: HttpServletResponse) {
     // TODO: Implement this method.
   }
 }

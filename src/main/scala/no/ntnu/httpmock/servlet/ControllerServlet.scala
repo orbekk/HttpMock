@@ -62,6 +62,6 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
     }
   }
 
-  def getResponseFor(request: HttpServletRequest): Option[DummyMockResponse] =
+  def getResponseFor(request: HttpServletRequest): Option[Mock] =
     mockHandler.getResponseFor(request)
 }
