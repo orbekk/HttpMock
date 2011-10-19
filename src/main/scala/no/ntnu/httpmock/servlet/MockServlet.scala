@@ -8,7 +8,8 @@ import no.ntnu.httpmock.Mock
 import no.ntnu.httpmock.MockProvider
 import no.ntnu.httpmock.DummyMockResponse
 
-class MockServlet(mockProvider: MockProvider)
+class MockServlet(mockProvider: MockProvider,
+    var unexpectedCallHandler: HttpServlet)
     extends HttpServlet with Logger {
   override protected def doGet(request: HttpServletRequest,
       response: HttpServletResponse) {
@@ -27,9 +28,8 @@ class MockServlet(mockProvider: MockProvider)
 
   private def unexpectedCall(request: HttpServletRequest,
       response: HttpServletResponse, requestString: String) {
-    logger.warning("Unexpected call: " + requestString + ". " +
-        "Note: In future versions this will give a verification error, but " +
-        "verification is not yet supported")
+    logger.info("Unexpected call: " + requestString)
+    unexpectedCallHandler.service(request, response)
     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unexpected call")
   }
 }

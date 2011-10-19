@@ -10,6 +10,7 @@ import net.liftweb.json.DefaultFormats
 import net.liftweb.json.Serialization
 import no.ntnu.httpmock.servlet.ControllerServlet
 import no.ntnu.httpmock.servlet.MockServlet
+import no.ntnu.httpmock.servlet.NullServlet
 import org.junit.runner.RunWith
 import org.mockito.Matchers
 import org.mockito.Matchers.{anyInt, anyString}
@@ -31,7 +32,7 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
 
   override def beforeEach() {
     controller = new ControllerServlet(new SimpleMockHandler)
-    mockServlet = new MockServlet(controller)
+    mockServlet = new MockServlet(controller, new NullServlet())
   }
 
   /** Configure the request parameters for the mock request.

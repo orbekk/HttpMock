@@ -41,11 +41,6 @@ object LoggerWrapperServlet {
       }
     }
   }
-
-  def create(logger: LogServlet.RequestLogger, wrappedServlet: HttpServlet,
-      tag: String): LoggerWrapperServlet = {
-    new LoggerWrapperServlet(new ContextRequestLogger(logger), wrappedServlet, tag)
-  }
 }
 
 class LoggerWrapperServlet(
