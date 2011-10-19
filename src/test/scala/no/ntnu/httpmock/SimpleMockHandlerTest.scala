@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest
 
 @RunWith(classOf[JUnitRunner])
 class SimpleMockHandlerTest extends FunSuite {
+  // TODO: This is a hack. For some reason we need to cast getParameterMap() to
+  // this type, which should already be implied.
+  type J = java.util.Map[String, Array[String]]
+
   val handler = new SimpleMockHandler
   val exampleMockParameters0 = ListMap("Fruits" -> List("Apple", "Orange"))
   val exampleRequestParameters0 = ListMap("Animals" -> List("Cat")) ++
@@ -25,7 +29,8 @@ class SimpleMockHandlerTest extends FunSuite {
     initExampleHandler0()
     val request = mock(classOf[HttpServletRequest])
     val requestParameterMap = ListMap("UnknownParameter" -> Array("Something"))
-    when(request.getParameterMap()) thenReturn requestParameterMap
+    when(request.getParameterMap().asInstanceOf[J])
+        .thenReturn(requestParameterMap)
     assert(handler.getResponseFor(request) === None)
   }
 
@@ -33,7 +38,8 @@ class SimpleMockHandlerTest extends FunSuite {
     initExampleHandler0()
     val request = mock(classOf[HttpServletRequest])
     val requestParameterMap = ListMap("Fruits" -> Array("Apple", "Orange"))
-    when(request.getParameterMap()) thenReturn requestParameterMap
+    when(request.getParameterMap().asInstanceOf[J])
+        .thenReturn(requestParameterMap)
     val maybeMockResponse = handler.getResponseFor(request)
     assert(maybeMockResponse != None)
     assert(maybeMockResponse isDefined)

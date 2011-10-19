@@ -22,6 +22,10 @@ import scala.collection.immutable.ListMap
 
 @RunWith(classOf[JUnitRunner])
 class FunctionalTest extends FunSuite with BeforeAndAfterEach {
+  // TODO: This is a hack. For some reason we need to cast getParameterMap() to
+  // this type, which should already be implied.
+  type J = java.util.Map[String, Array[String]]
+
   var controller: ControllerServlet = _
   var mockServlet: MockServlet = _
 
@@ -36,7 +40,8 @@ class FunctionalTest extends FunSuite with BeforeAndAfterEach {
    */
   def setRequestParameters(request: HttpServletRequest, elems: (String, Array[String])*) {
     val parameterMap = ListMap() ++ elems
-    when(request.getParameterMap()) thenReturn parameterMap
+    when(request.getParameterMap().asInstanceOf[J])
+        .thenReturn(parameterMap)
   }
 
   def setRequestBody(request: HttpServletRequest, body: String) {

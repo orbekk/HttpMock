@@ -58,10 +58,11 @@ class ParameterMatcher(parameters: Map[String, Seq[String]],
   def matches(request: HttpServletRequest): Boolean = {
     // For some reason the compiler refuses to infer the generic types
     // and returns a Map[_, _]. This cast is necessary.
-    val javaRequestParameters: Map[String, Array[String]]=
-      request.getParameterMap().asInstanceOf[Map[String,Array[String]]]
+    type J = java.util.Map[String, Array[String]]
+    val javaRequestParameters: J =
+      request.getParameterMap().asInstanceOf[J]
     val requestParameters: Map[String, Seq[String]] =
-      ParameterMatcher.convertParameterMap(javaRequestParameters)
+      ParameterMatcher.convertParameterMap(javaRequestParameters.toMap)
     internalMatches(parameters, requestParameters)
   }
 
