@@ -27,6 +27,6 @@ class RequestForwarder(httpClient: HttpClient) {
     val converter = new HttpServletRequestConverter(baseUri.toString())
     val httpRequest = converter.convertRequest(request)
     val httpResponse = httpClient.execute(httpRequest)
-    val servletResponse = (new ResponseHandler).handle(httpResponse, response)
+    (new ResponseHandler).handle(httpResponse, response)
   }
 }
