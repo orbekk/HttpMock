@@ -9,10 +9,10 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class FunctionalTest extends FunSuite with BeforeAndAfterEach {
   var contextRequestLogger: LoggerWrapperServlet.ContextRequestLogger = null
-  var mockLogger: LoggerWrapperServlet.RequestLogger = null
+  var mockLogger: LogServlet.RequestLogger = null
 
   override def beforeEach() {
-    mockLogger = mock(classOf[LoggerWrapperServlet.RequestLogger])
+    mockLogger = mock(classOf[LogServlet.RequestLogger])
     contextRequestLogger = new LoggerWrapperServlet.ContextRequestLogger(mockLogger)
   }
 

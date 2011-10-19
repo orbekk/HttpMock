@@ -1,5 +1,6 @@
 package no.ntnu.httpmock.servlet
 
+import com.orbekk.logging.Logger
 import java.net.URI
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -13,8 +14,9 @@ object ProxyServlet {
 }
 
 class ProxyServlet(forwarder: RequestForwarder, baseUri: URI)
-    extends HttpServlet {
+    extends HttpServlet with Logger {
   override def service(request: HttpServletRequest, response: HttpServletResponse) {
+    logger.info("Forwarding request: " + request.getRequestURI)
     forwarder.execute(baseUri, request, response)
   }
 }
