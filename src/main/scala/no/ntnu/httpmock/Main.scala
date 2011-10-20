@@ -33,6 +33,10 @@ object Main extends App {
     val mockServlet = new MockServlet(controller, wrappedUnexpectedCallServlet)
     val wrappedMockServlet = wrap(mockServlet, "mock")
     
+    // TODO: I can't imagine not wanting to ignore /favicon.ico, but
+    // we may need a smarter way to ignore certain paths.
+    context.addServlet(new ServletHolder(new NullServlet), "/favicon.ico")
+
     context.addServlet(new ServletHolder(logServlet), "/_httpmock/log")
     context.addServlet(new ServletHolder(controller), "/_httpmock/*")
     context.addServlet(new ServletHolder(wrappedMockServlet), "/*")
