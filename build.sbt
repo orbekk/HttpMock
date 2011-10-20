@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 // Dependencies
 libraryDependencies ++= Seq(
     "org.apache.httpcomponents" % "httpclient" % "latest.integration",
-    "javax.servlet" % "servlet-api" % "3.0-alpha-1",
+    "javax.servlet" % "servlet-api" % "2.5",
     "net.liftweb" % "lift-json_2.9.1" % "latest.integration",
     "org.eclipse.jetty" % "jetty-server" % "latest.integration",
     "org.eclipse.jetty" % "jetty-servlet" % "latest.integration"
