@@ -19,7 +19,9 @@ object LogServlet {
     object LogEntry {
       def create(tag: String, request: HttpServletRequest,
         response: HttpServletResponse): LogEntry = {
-        LogEntry(tag, "Not implemented", "Not implemented")
+        LogEntry(tag = tag,
+            request = HttpServletRequestPrinter.print(request),
+            response = "Not implemented")
       }
     }
 
