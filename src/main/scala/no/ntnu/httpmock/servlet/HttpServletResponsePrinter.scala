@@ -13,8 +13,24 @@ object HttpServletResponsePrinter {
    * Print an HttpServletResponse and return it as a String.
    */
   def print(response: HttpServletResponse): String = {
-    // TODO: In order to print a HttpServletResponse, we have to provide a
-    // wrapper that captures the data we want from the servlet.
-    "Unable to print response"
+    val builder: StringBuilder = new StringBuilder
+    response match {
+      case loggingResponse: LoggingHttpServletResponse =>
+        internalPrint(builder, loggingResponse)
+      case _ => 
+        builder.append("Unable to print response: ")
+        builder.append("Must be a LoggingHttpServletResponse.")
+    }
+    return builder.toString()
+  }
+
+  def internalPrint(builder: StringBuilder,
+      response: LoggingHttpServletResponse) {
+    addStatusLine(builder, response)
+  }
+
+  def addStatusLine(builder: StringBuilder,
+      response: LoggingHttpServletResponse) {
+    builder.append(response.status)
   }
 }
