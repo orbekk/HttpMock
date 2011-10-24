@@ -43,10 +43,29 @@ object LoggerWrapperServlet {
   }
 }
 
+/**
+ * This class performs various hacks that helps logging.
+ * 
+ * Not thread-safe.
+ *
+ * TODO: Make it thread-safe?
+ */
 class LoggerWrapperServlet(
     contextRequestLogger: LoggerWrapperServlet.ContextRequestLogger,
     wrappedServlet: HttpServlet, tag: String) extends HttpServlet
     with Logger {
+
+  /**
+   * Wraps the HttpServletResponse in a LoggingHttpServletRespnose
+   * if that has not already been done by a parent LoggerWrapperServlet.
+   */
+  def convertResponse(request: HttpServletRequest,
+      response: HttpServletResponse) {
+    response match {
+      case loggingResponse: LoggingHttpServletResponse => loggingResponse
+      case _ => LoggingHttpServletResponse.create(request, response)
+    }
+  }
 
   override def service(request: HttpServletRequest, response: HttpServletResponse) {
     contextRequestLogger.withScope(tag) { logger =>
