@@ -31,6 +31,8 @@ object HttpServletResponsePrinter {
 
   def addStatusLine(builder: StringBuilder,
       response: LoggingHttpServletResponse) {
+    builder.append(response.method)
+    builder.append(" ")
     builder.append(response.status)
   }
 }

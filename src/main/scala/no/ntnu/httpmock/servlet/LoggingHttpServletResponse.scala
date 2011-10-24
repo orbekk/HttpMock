@@ -13,7 +13,8 @@ object LoggingHttpServletResponse {
    * Copies some metadata (e.g. the protocol) from the request and returns an
    * HttpServletResponse that collects the data that is passed into it.
    */
-  def create(request: HttpServletRequest, response: HttpServletResponse) {
+  def create(request: HttpServletRequest, response: HttpServletResponse):
+      LoggingHttpServletResponse = {
     new LoggingHttpServletResponse(method = request.getMethod(),
         response = response)
   }
