@@ -24,12 +24,12 @@ object HttpServletResponsePrinter {
     return builder.toString()
   }
 
-  def internalPrint(builder: StringBuilder,
+  private def internalPrint(builder: StringBuilder,
       response: LoggingHttpServletResponse) {
     addStatusLine(builder, response)
   }
 
-  def addStatusLine(builder: StringBuilder,
+  private def addStatusLine(builder: StringBuilder,
       response: LoggingHttpServletResponse) {
     builder.append(response.method)
     builder.append(" ")
