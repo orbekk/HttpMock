@@ -21,7 +21,7 @@ class HttpServletResponsePrinterTest extends FunSuite with Logger {
 
   test("Prints HTTP response.") {
     val request: HttpServletRequest = mock(classOf[HttpServletRequest])
-    when(request.getMethod()) thenReturn "HTTP/1.1"
+    when(request.getProtocol()) thenReturn "HTTP/1.1"
 
     val response0: HttpServletResponse = mock(classOf[HttpServletResponse])
     val response: LoggingHttpServletResponse = 

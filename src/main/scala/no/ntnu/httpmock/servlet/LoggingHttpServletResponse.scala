@@ -15,12 +15,12 @@ object LoggingHttpServletResponse {
    */
   def create(request: HttpServletRequest, response: HttpServletResponse):
       LoggingHttpServletResponse = {
-    new LoggingHttpServletResponse(method = request.getMethod(),
+    new LoggingHttpServletResponse(protocol = request.getProtocol(),
         response = response)
   }
 }
 
-class LoggingHttpServletResponse(val method: String,
+class LoggingHttpServletResponse(val protocol: String,
     val response: HttpServletResponse)
     extends HttpServletResponseWrapper(response) {
   val parameters = new HashMap[String, List[String]]
