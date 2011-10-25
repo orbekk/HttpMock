@@ -60,17 +60,20 @@ class LoggerWrapperServlet(
    * if that has not already been done by a parent LoggerWrapperServlet.
    */
   def convertResponse(request: HttpServletRequest,
-      response: HttpServletResponse) {
+      response: HttpServletResponse): LoggingHttpServletResponse = {
     response match {
       case loggingResponse: LoggingHttpServletResponse => loggingResponse
       case _ => LoggingHttpServletResponse.create(request, response)
     }
   }
 
-  override def service(request: HttpServletRequest, response: HttpServletResponse) {
+  override def service(request: HttpServletRequest,
+      response: HttpServletResponse) {
+    val wrappedResponse: LoggingHttpServletResponse =
+        convertResponse(request, response)
     contextRequestLogger.withScope(tag) { logger =>
-      wrappedServlet.service(request, response)
-      logger.log(tag, request, response)
+      wrappedServlet.service(request, wrappedResponse)
+      logger.log(tag, request, wrappedResponse)
     }
   }
 }

@@ -21,7 +21,7 @@ object LogServlet {
         response: HttpServletResponse): LogEntry = {
         LogEntry(tag = tag,
             request = HttpServletRequestPrinter.print(request),
-            response = "Not implemented")
+            response = HttpServletResponsePrinter.print(response))
       }
     }
 
