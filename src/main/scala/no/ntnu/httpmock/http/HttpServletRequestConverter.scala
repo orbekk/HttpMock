@@ -12,13 +12,12 @@ import scala.collection.JavaConversions.mapAsScalaMap
  * Adds a different base url to the new request. This can be used for
  * forwarding.
  */
-class HttpServletRequestConverter(newBaseUri: String) {
+class HttpServletRequestConverter(newUri: URI) {
   def convertRequest(request: HttpServletRequest): HttpUriRequest = {
     val convertedRequest = new HttpEntityEnclosingRequestBase() {
       def getMethod(): String = request.getMethod()
     }
-    convertedRequest.setURI(
-        new URI(newBaseUri + request.getRequestURI()))
+    convertedRequest.setURI(newUri)
 
     val javaParameters = request.getParameterMap()
         .asInstanceOf[java.util.Map[String, Array[String]]]

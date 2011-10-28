@@ -15,7 +15,7 @@ import org.eclipse.jetty.servlet.ServletHolder
 object Main extends App {
   // TODO: Configure this with command-line flags.
   val useProxy: Boolean = true
-  val proxyUrl: URI = new URI("http://rememberthemilk.com/")
+  val proxyUrl: URI = new URI("http://api.rememberthemilk.com/services")
 
   def startServer(port: Int): Server = {
     val server = new Server(port)
