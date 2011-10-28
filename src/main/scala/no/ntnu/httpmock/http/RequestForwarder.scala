@@ -29,6 +29,7 @@ class RequestForwarder(httpClient: HttpClient) {
     val httpRequest = converter.convertRequest(request)
     val httpResponse = httpClient.execute(httpRequest)
     (new ResponseHandler).handle(httpResponse, response)
-    response.addHeader("X-HTTPMOCK-FORWARDING-URI", newUrl.toString())
+    response.addHeader("X-HTTPMOCK-FORWARDING-URI",
+        httpRequest.getURI().toString())
   }
 }
