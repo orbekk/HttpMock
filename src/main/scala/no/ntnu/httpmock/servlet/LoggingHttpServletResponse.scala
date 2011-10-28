@@ -34,6 +34,12 @@ class LoggingHttpServletResponse(val protocol: String,
     super.sendError(error)
   }
 
+  override def setStatus(status: Int) {
+    this.status = status
+    statusMessage = "<Unknown status>"
+    super.setStatus(status)
+  }
+
   override def sendError(error: Int, message: String) {
     status = error
     statusMessage = message

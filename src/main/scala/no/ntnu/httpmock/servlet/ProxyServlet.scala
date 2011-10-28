@@ -16,7 +16,7 @@ object ProxyServlet {
 class ProxyServlet(forwarder: RequestForwarder, baseUri: URI)
     extends HttpServlet with Logger {
   override def service(request: HttpServletRequest, response: HttpServletResponse) {
-    logger.info("Forwarding request: " + request.getRequestURI)
     forwarder.execute(baseUri, request, response)
+    logger.info("Forwarded request " + request.getRequestURI)
   }
 }

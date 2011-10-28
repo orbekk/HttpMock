@@ -13,6 +13,10 @@ import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 
 object Main extends App {
+  // TODO: Configure this with command-line flags.
+  val useProxy: Boolean = true
+  val proxyUrl: URI = new URI("http://rememberthemilk.com/")
+
   def startServer(port: Int): Server = {
     val server = new Server(port)
     val context = new ServletContextHandler(server, "/")
@@ -25,6 +29,9 @@ object Main extends App {
 
     def wrap(servlet: HttpServlet, tag: String) =
         new LoggerWrapperServlet(logContext, servlet, tag)
+
+    val proxyServlet = ProxyServlet.create(proxyUrl)
+    val wrappedProxyServlet = wrap(proxyServlet, "proxy")
 
     val unexpectedCallServlet = new NullServlet
     val wrappedUnexpectedCallServlet =
@@ -39,7 +46,11 @@ object Main extends App {
 
     context.addServlet(new ServletHolder(logServlet), "/_httpmock/log")
     context.addServlet(new ServletHolder(controller), "/_httpmock/*")
-    context.addServlet(new ServletHolder(wrappedMockServlet), "/*")
+    if (useProxy) {
+      context.addServlet(new ServletHolder(wrappedProxyServlet), "/*") 
+    } else {
+      context.addServlet(new ServletHolder(wrappedMockServlet), "/*")
+    }
     server.start
     server
   }
