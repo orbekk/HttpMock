@@ -29,9 +29,18 @@ object HttpServletResponsePrinter extends Logger {
   private def internalPrint(builder: StringBuilder,
       response: LoggingHttpServletResponse) {
     addStatusLine(builder, response)
-    // TODO: Add headers.
+    addHeaders(builder, response)
     builder.append("\n\n")
     builder.append(response.getContent())
+  }
+
+  private def addHeaders(builder: StringBuilder,
+      response: LoggingHttpServletResponse) {
+    response.parameters.foreach { case (name, values) =>
+      values.foreach { value =>
+        builder.append(name + ": " + value + "\n")
+      }
+    }
   }
 
   private def addStatusLine(builder: StringBuilder,
@@ -41,5 +50,6 @@ object HttpServletResponsePrinter extends Logger {
     builder.append(response.status)
     builder.append(" ")
     builder.append(response.statusMessage)
+    builder.append("\n")
   }
 }
