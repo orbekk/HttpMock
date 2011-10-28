@@ -45,6 +45,11 @@ class LogServlet(val logger: LogServlet.DefaultRequestLogger)
       def println(s: String) { response.getWriter().println(s) }
 
       println("<html>")
+      println("<head>")
+      println("<style>")
+      println("td { vertical-align: top; padding: 0.2em; };")
+      println("</style>")
+      println("</head>")
       println("<body>")
       println("<table>")
       println("<tr><td>Tag</td><td>Request</td><td>Response</td></tr>")
