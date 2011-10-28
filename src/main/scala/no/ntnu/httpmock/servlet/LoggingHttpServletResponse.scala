@@ -2,9 +2,11 @@ package no.ntnu.httpmock.servlet
 
 import com.orbekk.logging.Logger
 import java.io.StringWriter
+import javax.servlet.ServletOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpServletResponseWrapper
+import no.ntnu.httpmock.io.OutputStreamSplitter
 import scala.collection.mutable.HashMap
 
 object LoggingHttpServletResponse {
@@ -25,8 +27,12 @@ class LoggingHttpServletResponse(val protocol: String,
     val response: HttpServletResponse)
     extends HttpServletResponseWrapper(response) with Logger {
   val parameters = new HashMap[String, List[String]]
+  private val outputStream = new OutputStreamSplitter(
+    response.getOutputStream())
   var status = 200
   var statusMessage = "OK"
+
+  override def getOutputStream(): ServletOutputStream = outputStream
 
   override def sendError(error: Int) {
     status = error
@@ -52,4 +58,6 @@ class LoggingHttpServletResponse(val protocol: String,
     parameters.put(name, oldValues :+ value) 
     super.addHeader(name, value)
   }
+
+  def getContent(): String = outputStream.getContent()
 }

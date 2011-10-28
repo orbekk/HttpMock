@@ -29,6 +29,9 @@ object HttpServletResponsePrinter extends Logger {
   private def internalPrint(builder: StringBuilder,
       response: LoggingHttpServletResponse) {
     addStatusLine(builder, response)
+    // TODO: Add headers.
+    builder.append("\n\n")
+    builder.append(response.getContent())
   }
 
   private def addStatusLine(builder: StringBuilder,

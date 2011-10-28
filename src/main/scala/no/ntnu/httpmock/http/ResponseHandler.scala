@@ -11,13 +11,13 @@ import org.apache.http.HttpEntity
 class ResponseHandler {
   def handle(httpResponse: HttpResponse,
       servletResponse: HttpServletResponse) {
-        if (httpResponse.getEntity() != null) {
-          httpResponse.getEntity().writeTo(servletResponse.getOutputStream())
-        }
+    if (httpResponse.getEntity() != null) {
+      httpResponse.getEntity().writeTo(servletResponse.getOutputStream())
+    }
 
-        servletResponse.setStatus(httpResponse.getStatusLine().getStatusCode())
-        httpResponse.getAllHeaders() foreach { header: Header =>
-          servletResponse.addHeader(header.getName(), header.getValue())
-        }
+    servletResponse.setStatus(httpResponse.getStatusLine().getStatusCode())
+    httpResponse.getAllHeaders() foreach { header: Header =>
+      servletResponse.addHeader(header.getName(), header.getValue())
+    }
   }
 }
