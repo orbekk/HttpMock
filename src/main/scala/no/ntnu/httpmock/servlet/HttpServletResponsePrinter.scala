@@ -1,5 +1,6 @@
 package no.ntnu.httpmock.servlet
 
+import com.orbekk.logging.Logger
 import java.net.URLEncoder
 import javax.servlet.http.HttpServletResponse
 import scala.collection.JavaConversions.mapAsScalaMap
@@ -8,12 +9,13 @@ import scala.collection.mutable.StringBuilder
 /**
  * Pretty print HttpServletResponse.
  */
-object HttpServletResponsePrinter {
+object HttpServletResponsePrinter extends Logger {
   /**
    * Print an HttpServletResponse and return it as a String.
    */
   def print(response: HttpServletResponse): String = {
     val builder: StringBuilder = new StringBuilder
+    logger.info("Printing response " + response)
     response match {
       case loggingResponse: LoggingHttpServletResponse =>
         internalPrint(builder, loggingResponse)
@@ -34,5 +36,7 @@ object HttpServletResponsePrinter {
     builder.append(response.protocol)
     builder.append(" ")
     builder.append(response.status)
+    builder.append(" ")
+    builder.append(response.statusMessage)
   }
 }

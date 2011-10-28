@@ -29,7 +29,7 @@ class MockServlet(mockProvider: MockProvider,
   private def unexpectedCall(request: HttpServletRequest,
       response: HttpServletResponse, requestString: String) {
     logger.info("Unexpected call: " + requestString)
-    unexpectedCallHandler.service(request, response)
     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unexpected call")
+    unexpectedCallHandler.service(request, response)
   }
 }

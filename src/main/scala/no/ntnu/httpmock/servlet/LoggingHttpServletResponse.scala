@@ -1,5 +1,6 @@
 package no.ntnu.httpmock.servlet
 
+import com.orbekk.logging.Logger
 import java.io.StringWriter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -22,7 +23,7 @@ object LoggingHttpServletResponse {
 
 class LoggingHttpServletResponse(val protocol: String,
     val response: HttpServletResponse)
-    extends HttpServletResponseWrapper(response) {
+    extends HttpServletResponseWrapper(response) with Logger {
   val parameters = new HashMap[String, List[String]]
   var status = 200
   var statusMessage = "OK"
@@ -36,6 +37,7 @@ class LoggingHttpServletResponse(val protocol: String,
   override def sendError(error: Int, message: String) {
     status = error
     statusMessage = message
+    logger.info("SendError from " + this)
     super.sendError(error, message)
   }
 
