@@ -1,7 +1,11 @@
 package no.ntnu.httpmock
 
+import java.lang.Integer
 import java.net.URI
 import javax.servlet.http.HttpServlet
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 import no.ntnu.httpmock.servlet.ControllerServlet
 import no.ntnu.httpmock.servlet.LogServlet
 import no.ntnu.httpmock.servlet.LoggerWrapperServlet
@@ -13,11 +17,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 
 object Main extends App {
-  // TODO: Configure this with command-line flags.
-  val useProxy: Boolean = true
-  val proxyUrl: URI = new URI("http://api.rememberthemilk.com/services")
-
-  def startServer(port: Int): Server = {
+  def startServer(port: Int, useProxy: Boolean, proxyUrl: String): Server = {
     val server = new Server(port)
     val context = new ServletContextHandler(server, "/")
 
@@ -30,15 +30,9 @@ object Main extends App {
     def wrap(servlet: HttpServlet, tag: String) =
         new LoggerWrapperServlet(logContext, servlet, tag)
 
-    val proxyServlet = ProxyServlet.create(proxyUrl)
-    val wrappedProxyServlet = wrap(proxyServlet, "proxy")
-
     val unexpectedCallServlet = new NullServlet
     val wrappedUnexpectedCallServlet =
         wrap(unexpectedCallServlet, "unexpected")
-
-    val mockServlet = new MockServlet(controller, wrappedUnexpectedCallServlet)
-    val wrappedMockServlet = wrap(mockServlet, "mock")
     
     // TODO: I can't imagine not wanting to ignore /favicon.ico, but
     // we may need a smarter way to ignore certain paths.
@@ -47,15 +41,29 @@ object Main extends App {
     context.addServlet(new ServletHolder(logServlet), "/_httpmock/log")
     context.addServlet(new ServletHolder(controller), "/_httpmock/*")
     if (useProxy) {
+      val proxyServlet = ProxyServlet.create(new URI(proxyUrl))
+      val wrappedProxyServlet = wrap(proxyServlet, "proxy")
       context.addServlet(new ServletHolder(wrappedProxyServlet), "/*") 
     } else {
+      val mockServlet = new MockServlet(controller, wrappedUnexpectedCallServlet)
+      val wrappedMockServlet = wrap(mockServlet, "mock")
       context.addServlet(new ServletHolder(wrappedMockServlet), "/*")
     }
     server.start
     server
   }
 
-  Console.println("Hello Scala!")
-  val server = startServer(8080)
-  server.join()
+  override def main(args: Array[String]) = {
+    val parser = new OptionParser
+    parser.accepts("use-proxy")
+    val port: OptionSpec[Integer] =
+      parser.accepts("port").withRequiredArg().ofType(classOf[Integer]).required()
+    val proxyUrl: OptionSpec[String] =
+    parser.accepts("proxy-url").withRequiredArg().ofType(classOf[String])
+    val options: OptionSet = parser.parse(args: _*)
+
+    val server = startServer(options.valueOf(port),
+        options.has("use-proxy"), options.valueOf(proxyUrl))
+    server.join()
+  }
 }
