@@ -1,6 +1,7 @@
 package no.ntnu.httpmock.servlet
 
 import com.orbekk.logging.Logger
+import java.io.PrintWriter
 import java.io.StringWriter
 import javax.servlet.ServletOutputStream
 import javax.servlet.http.HttpServletRequest
@@ -29,10 +30,15 @@ class LoggingHttpServletResponse(val protocol: String,
   val parameters = new HashMap[String, List[String]]
   private val outputStream = new OutputStreamSplitter(
     response.getOutputStream())
+  private val writer = new PrintWriter(outputStream)
   var status = 200
   var statusMessage = "OK"
 
   override def getOutputStream(): ServletOutputStream = outputStream
+
+  override def getWriter(): PrintWriter = {
+    writer
+  }
 
   override def sendError(error: Int) {
     status = error
@@ -59,5 +65,8 @@ class LoggingHttpServletResponse(val protocol: String,
     super.addHeader(name, value)
   }
 
-  def getContent(): String = outputStream.getContent()
+  def getContent(): String = {
+    writer.flush()
+    outputStream.getContent()
+  }
 }
