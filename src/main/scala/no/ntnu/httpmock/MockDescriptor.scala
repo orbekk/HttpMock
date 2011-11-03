@@ -7,14 +7,11 @@ import net.liftweb.json.JsonParser
 import no.ntnu.httpmock.matcher.MatcherBuilder
 
 object MockDescriptor {
-  def parseFromRequest(s: Reader): MockDescriptor =
-    try {
-      val json = JsonParser.parse(s)
-      implicit val formats = DefaultFormats
-      json.extract[MockDescriptor]
-    } catch {
-      case e:JsonParser.ParseException => return null
-    }
+  def parseFromRequest(s: Reader): MockDescriptor = {
+    val json = JsonParser.parse(s)
+    implicit val formats = DefaultFormats
+    json.extract[MockDescriptor]
+  }
 }
 
 /**
@@ -23,7 +20,8 @@ object MockDescriptor {
  *
  * Example of JSON string:
  *   {"path": "/some/path",
- *    "parameters": {"parameter1": ["val1", "val2"]}}
+ *    "parameters": {"parameter1": ["val1", "val2"]},
+ *    "response": {"content": "some text content"}}
  */
 case class MockDescriptor(
     path: String,

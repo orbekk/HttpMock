@@ -6,6 +6,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import net.liftweb.json.Serialization
 import net.liftweb.json.DefaultFormats
+import net.liftweb.json.JsonParser
 
 @RunWith(classOf[JUnitRunner])
 class MockDescriptorTest extends FunSuite {
@@ -14,9 +15,15 @@ class MockDescriptorTest extends FunSuite {
   }
 
   test("Invalid request should fail to parse") {
-    assert(parse("") === null)
-    assert(parse("invalid request") === null)
-    assert(parse("{ {:") === null)
+    intercept[JsonParser.ParseException] {
+      parse("")
+    }
+    intercept[JsonParser.ParseException] {
+      parse("invalid request")
+    }
+    intercept[JsonParser.ParseException] {
+      parse("{ {:")
+    }
   }
 
   test("Valid requests should parse correctly") {

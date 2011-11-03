@@ -4,6 +4,7 @@ import com.orbekk.logging.Logger
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import net.liftweb.json.JsonParser
 import no.ntnu.httpmock.DummyMockResponse
 import no.ntnu.httpmock.Mock
 import no.ntnu.httpmock.MockDescriptor
@@ -44,21 +45,21 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
   def setMock(request: HttpServletRequest, response: HttpServletResponse) {
     try {
       val descriptor = MockDescriptor.parseFromRequest(request.getReader())
-      if (descriptor != null) {
-        logger.info("Registering mock: " + descriptor toString)
-        val matcher = descriptor.buildMatcher()
-        val mock = new Mock(descriptor, matcher)
-        // val mockRequest = Types.MockRequest(matcher)
-        // val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
-        mockHandler.registerMock(mock)
-      } else {
-        logger.warning("MockDescriptor did not parse")
-      }
+      logger.info("Registering mock: " + descriptor toString)
+      val matcher = descriptor.buildMatcher()
+      val mock = new Mock(descriptor, matcher)
+      // val mockRequest = Types.MockRequest(matcher)
+      // val mockResponse = Types.MockResponse("TODO: Implement mock responses.")
+      mockHandler.registerMock(mock)
     } catch {
       case e:ServletHelper.ParameterNotFoundException =>
         logger.warning("Got error: " + e.getMessage)
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
             "missing parameter: " + e.getMessage)
+      case e:JsonParser.ParseException =>
+        logger.warning("MockDescriptor did not parse: " + e.getMessage)
+        response.getWriter().println(e.getMessage)
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR)
     }
   }
 
