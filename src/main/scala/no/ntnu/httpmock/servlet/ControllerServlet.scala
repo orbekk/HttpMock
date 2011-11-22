@@ -21,6 +21,7 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
 
     path match {
       case "/" => defaultPage(request, response)
+      case "/status" => statusPage(request, response)
       case _ => response.sendError(HttpServletResponse.SC_NOT_FOUND)
     }
   }
@@ -33,6 +34,11 @@ class ControllerServlet(mockHandler: MockHandler) extends HttpServlet
       case "/set" => setMock(request, response)
       case _ => response.sendError(HttpServletResponse.SC_NOT_FOUND)
     }
+  }
+
+  def statusPage(request: HttpServletRequest, response: HttpServletResponse) {
+    response.setContentType("text/plain; charsen=utf-8")
+    response.getWriter().println("online")
   }
 
   def defaultPage(request: HttpServletRequest, response: HttpServletResponse) {
