@@ -52,13 +52,16 @@ class LogServlet(val logger: LogServlet.DefaultRequestLogger)
       println("</head>")
       println("<body>")
       println("<table>")
-      println("<tr><td>Tag</td><td>Request</td><td>Response</td></tr>")
+      println("<tr><td>Tag</td><td>Request, response</td></tr>")
 
       logger.logEntries foreach { entry =>
         println("<tr>")
         println("<td>" + entry.tag + "</td>")
-        println("<td><pre>" + escape(entry.request) + "</pre></td>")
-        println("<td><pre>" + escape(entry.response) + "</pre></td>")
+        println("<td><p><b>Request</b></p>")
+        println("<pre>" + escape(entry.request) + "</pre>")
+        println("<p><b>Response</b></p>")
+        println("<pre>" + escape(entry.response) + "</pre>")
+        println("</td>")
         println("</tr>")
       }
 
