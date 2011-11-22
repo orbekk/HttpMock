@@ -7,8 +7,8 @@ import com.orbekk.logging.Logger
 
 object ParameterMatcher {
   // TODO: Add partial matching.
-  case class Options(ignoredFields: List[String])
-  val defaultOptions = Options(Nil)
+  case class Options(ignoredFields: List[String], partialMatching: Boolean)
+  val defaultOptions = Options(ignoredFields = List(), partialMatching = true)
 
   def fromJavaParameterMap(parameters: Map[String, Array[String]]) =
     new ParameterMatcher(convertParameterMap(parameters))
@@ -32,17 +32,23 @@ class ParameterMatcher(parameters: Map[String, Seq[String]],
     override def equals(that: Any): Boolean = {
       that match {
         case that0: ParameterMap =>
-            map.size == that0.map.size && map.forall {
-              case (k, v) => that0.map.get(k) match {
+          val sizeCheck = map.size == that0.map.size || options.partialMatching
+          val result = sizeCheck && map.forall {
+            case (k, v) => that0.map.get(k) match {
               case Some(v0) => seqCompare(v, v0)
               case None => false
             }
           }
+          logger.info("Testing parameters: \n  " + parameters.toString() + "\n  " +
+              that0.toString() + "\n  => " + result)
+          result
         case _ => false
       }
     }
 
     def seqCompare[T](array1: Seq[T], array2: Seq[T]): Boolean = {
+      logger.info("Sequences equel? " + (array1 == array2) +
+          "\n  " + array1 + "\n  " + array2)
       array1 == array2
     }
   }

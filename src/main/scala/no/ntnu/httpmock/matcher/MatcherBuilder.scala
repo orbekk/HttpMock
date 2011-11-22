@@ -1,4 +1,6 @@
 package no.ntnu.httpmock.matcher
+
+import com.orbekk.logging.Logger
 import javax.servlet.http.HttpServletRequest
 
 object MatcherBuilder {
@@ -6,7 +8,7 @@ object MatcherBuilder {
 }
 
 /** Build a stack of matchers. */
-class MatcherBuilder {
+class MatcherBuilder extends Logger {
   var matchers: List[RequestMatcher] = List()
 
   def withPath(path: String) = {
